@@ -1,0 +1,34 @@
+{
+  "name": "fuckitup",
+  "version": "1.0.0",
+  "description": "fuckitup.js",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack --config webpack.config.js --watch "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/romanran/fuckitup.js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/romanran/fuckitup.js/issues"
+  },
+  "homepage": "https://github.com/romanran/fuckitup.js#readme",
+  "dependencies": {
+    "lodash": "^4.17.10",
+    "zepto": "^1.2.0"
+  },
+  "devDependencies": {
+    "babel-env": "^2.4.1",
+    "babel-loader": "^7.1.5",
+    "clean-webpack-plugin": "^0.1.19",
+    "css-loader": "^1.0.0",
+    "friendly-errors-webpack-plugin": "^1.7.0",
+    "less-loader": "^4.1.0",
+    "mini-css-extract-plugin": "^0.4.1",
+    "webpack": "^4.16.3",
+    "webpack-cli": "^3.1.0"
+  }
+}
