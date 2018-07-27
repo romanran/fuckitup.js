@@ -1,14 +1,16 @@
 //387cb25ad7ef2814d44a27fe4f7ffb208d015626
-const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
+const WebpackNotifierPlugin = require('webpack-notifier')
+
 module.exports = {
     mode: 'development',
     entry: ['./src/main.js'],
     output: {
         path: path.resolve(__dirname, 'dist/'),
-        filename: 'dist/bundle.js'
+        filename: 'fuckitup.js'
     },
     module: {
         noParse: /lodash/,
@@ -49,6 +51,7 @@ module.exports = {
     },
     devtool: 'source-map',
     plugins: [
+        new WebpackNotifierPlugin(),
         new CleanWebpackPlugin('./dist'),
         new MiniCssExtractPlugin({
             filename: 'dist/[name].css',
