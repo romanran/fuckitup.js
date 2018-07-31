@@ -1,0 +1,23 @@
+[
+    {
+        "name": "Space inserter",
+        "severity": 3,
+        "module": "spacer",
+        "trigger": "hover",
+        "type": "all"
+    },
+    {
+        "name": "Image fucker",
+        "severity": 2,
+        "module": "img_fucker",
+        "trigger": "img_load",
+        "type": "img"
+    },
+    {
+        "name": "Image joker",
+        "severity": 3,
+        "module": "img_joker",
+        "trigger": "img_load",
+        "type": "img"
+    }
+]

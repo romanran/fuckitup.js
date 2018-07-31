@@ -1,5 +1,6 @@
 //387cb25ad7ef2814d44a27fe4f7ffb208d015626
 const path = require('path')
+const webpack = require('webpack')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
@@ -22,7 +23,7 @@ module.exports = {
                 },
             },
             {
-                test: /\.css$/i,
+                test: /\.less$/i,
                 use: [{
                         loader: MiniCssExtractPlugin.loader
                     },
@@ -51,12 +52,17 @@ module.exports = {
     },
     devtool: 'source-map',
     plugins: [
-        new WebpackNotifierPlugin(),
+        new WebpackNotifierPlugin({alwaysNotify: 0,skipFirstNotification: true}),
         new CleanWebpackPlugin('./dist'),
         new MiniCssExtractPlugin({
-            filename: 'dist/[name].css',
-            chunkFilename: 'dist/[id].css'
+            filename: 'fuckitup.css',
+            chunkFilename: '[id].css'
         }),
         new FriendlyErrorsWebpackPlugin(),
+        new webpack.DefinePlugin({
+            'process.env': {
+                NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+            }
+        })
     ]
 }

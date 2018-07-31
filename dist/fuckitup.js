@@ -9836,15 +9836,200 @@ module.exports = function (module) {
 
 /***/ }),
 
-/***/ "./src/Fuckers.js":
-/*!************************!*\
-  !*** ./src/Fuckers.js ***!
-  \************************/
+/***/ "./src/Fucker.js":
+/*!***********************!*\
+  !*** ./src/Fucker.js ***!
+  \***********************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var _require = __webpack_require__(/*! umbrellajs */ "./node_modules/umbrellajs/umbrella.min.js"),
+    u = _require.u;
+
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+var fuckers = {
+    spacer: __webpack_require__(/*! ./fuckers/spacer */ "./src/fuckers/spacer.js"),
+    img_fucker: __webpack_require__(/*! ./fuckers/img_fucker */ "./src/fuckers/img_fucker.js"),
+    img_joker: __webpack_require__(/*! ./fuckers/img_joker */ "./src/fuckers/img_joker.js")
+};
+
+var Fucker = function () {
+    function Fucker($wrap, type, fucker) {
+        _classCallCheck(this, Fucker);
+
+        this.$wrap = $wrap;
+        this.wrap = $wrap.nodes[0];
+        this.type = type;
+        this.active = false;
+        this.fucker = fucker;
+    }
+
+    _createClass(Fucker, [{
+        key: 'mount',
+        value: function mount() {
+            this.addListeners();
+        }
+    }, {
+        key: 'addListeners',
+        value: function addListeners() {
+            var _this = this;
+
+            fuckers[this.fucker.module].init && fuckers[this.fucker.module].init.call(this);
+            var triggers = {
+                load: function load() {
+                    document.addEventListener('DOMContentLoaded', fuckers[_this.fucker.module].start.bind(_this));
+                },
+                hover: function hover() {
+                    _this.$wrap.on('mouseover', fuckers[_this.fucker.module].start.bind(_this));
+                    _this.$wrap.on('mouseout', fuckers[_this.fucker.module].stop.bind(_this));
+                },
+                img_load: function img_load() {
+                    var start = _.once(fuckers[_this.fucker.module].start.bind(_this));
+                    if (_this.wrap.complete) start();
+                    _this.$wrap.on('load', start);
+                }
+            };
+            triggers[this.fucker.trigger]();
+        }
+    }]);
+
+    return Fucker;
+}();
+
+module.exports = Fucker;
+
+/***/ }),
+
+/***/ "./src/fuckers.json":
+/*!**************************!*\
+  !*** ./src/fuckers.json ***!
+  \**************************/
+/*! exports provided: 0, 1, 2, default */
+/***/ (function(module) {
+
+module.exports = [{"name":"Space inserter","severity":3,"module":"spacer","trigger":"hover","type":"all"},{"name":"Image fucker","severity":2,"module":"img_fucker","trigger":"img_load","type":"img"},{"name":"Image joker","severity":3,"module":"img_joker","trigger":"img_load","type":"img"}];
+
+/***/ }),
+
+/***/ "./src/fuckers/img_fucker.js":
+/*!***********************************!*\
+  !*** ./src/fuckers/img_fucker.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    init: function init() {
+        this.img_src = this.$wrap.attr('src');
+    },
+    start: function start() {
+        this.img_h = this.wrap.offsetHeight;
+        this.img_w = this.wrap.offsetWidth;
+        this.wrap.style.height = this.img_h + 'px';
+        this.wrap.style.width = this.img_w + 'px';
+        this.wrap.style.display = this.wrap.style.display ? this.wrap.style.display : 'block';
+        this.$wrap.attr('src', '#f-up');
+    },
+    stop: function stop() {
+        this.img_src = this.$wrap.attr('src', this.img_src);
+    }
+};
+
+/***/ }),
+
+/***/ "./src/fuckers/img_joker.js":
+/*!**********************************!*\
+  !*** ./src/fuckers/img_joker.js ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    init: function init() {
+        this.img_src = this.$wrap.attr('src');
+    },
+    start: function start() {
+        var service = 'http://placebear.com';
+        this.img_h = this.wrap.offsetHeight;
+        this.img_w = this.wrap.offsetWidth;
+        this.wrap.style.height = this.img_h + 'px';
+        this.wrap.style.width = this.img_w + 'px';
+        this.wrap.style.display = this.wrap.style.display ? this.wrap.style.display : 'block';
+        this.$wrap.attr('src', service + '/' + this.img_w + '/' + this.img_h);
+    },
+    stop: function stop() {
+        this.img_src = this.$wrap.attr('src', this.img_src);
+    }
+};
+
+/***/ }),
+
+/***/ "./src/fuckers/spacer.js":
+/*!*******************************!*\
+  !*** ./src/fuckers/spacer.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    init: function init() {
+        this.wrap.style.whiteSpace = 'pre-wrap';
+    },
+    start: function start() {
+        var _this = this;
+
+        this.active = true;
+        var addSpace = function addSpace() {
+            if (['input', 'textarea'].indexOf(_this.type) >= 0) {
+                var elem = _this.wrap.control ? _this.wrap.control : _this.wrap;
+                if (['radio', 'checkbox'].indexOf(elem.type) >= 0) {
+                    elem.checked = true;
+                } else {
+                    _this.wrap.value = '  ' + _this.wrap.value;
+                }
+            } else if (['svg', 'img', 'video', 'audio', 'iframe', 'select'].indexOf(_this.type) >= 0) {
+                _this.$wrap.parent().nodes[0].style.whiteSpace = 'pre-wrap';
+                _this.$wrap.parent().prepend('  ');
+            } else {
+                _this.$wrap.prepend('  ');
+            }
+            _this.active && requestAnimationFrame(function () {
+                return addSpace();
+            });
+        };
+        addSpace();
+    },
+    stop: function stop() {
+        this.active = false;
+    }
+};
+
+/***/ }),
+
+/***/ "./src/less/main.less":
+/*!****************************!*\
+  !*** ./src/less/main.less ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// extracted by mini-css-extract-plugin
 
 /***/ }),
 
@@ -9862,27 +10047,57 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var Fuckers = __webpack_require__(/*! ./Fuckers */ "./src/Fuckers.js");
+var Fucker = __webpack_require__(/*! ./Fucker */ "./src/Fucker.js");
 
 var _require = __webpack_require__(/*! umbrellajs */ "./node_modules/umbrellajs/umbrella.min.js"),
     u = _require.u;
 
 var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+__webpack_require__(/*! ./less/main.less */ "./src/less/main.less");
+var fuckers = __webpack_require__(/*! ./fuckers */ "./src/fuckers.json");
 
-var logger = console.log;
-window.deb = logger || function () {};
-var debug = true;
+window._ = _;
 
-var Fucker = function () {
-    function Fucker() {
-        var severity = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 4;
+var debug = "development" === 'development';
+window.deb = debug ? console.log : function () {};
 
-        _classCallCheck(this, Fucker);
+var FuckItUp = function () {
+    function FuckItUp() {
+        var severity = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 3;
+
+        _classCallCheck(this, FuckItUp);
 
         this.allowed_nodes = ['input', 'button', 'img', 'select', 'textarea'];
+        this.severities = {
+            1: 'lame',
+            2: 'fuckit',
+            3: 'berserk'
+        };
+        this.severity = this.filterSeverity(severity);
+        this.triggers = ['load', 'click', 'hover', 'onscreen'];
+        this.fucker_list = _.filter(fuckers, { severity: this.severity });
+        this.fuckers = [];
     }
 
-    _createClass(Fucker, [{
+    _createClass(FuckItUp, [{
+        key: 'filterSeverity',
+        value: function filterSeverity(severity) {
+            var result = 3;
+            if (_.isString(severity)) {
+                var find = _.findKey(this.severities, function (v, k) {
+                    return v === severity;
+                });
+                if (find) {
+                    result = find;
+                }
+            }
+            if (_.isNumber(severity)) {
+                result = severity < 1 || severity > 3 ? result : severity;
+            }
+
+            return result;
+        }
+    }, {
         key: 'fuckItUp',
         value: function fuckItUp() {
             this.init();
@@ -9890,15 +10105,16 @@ var Fucker = function () {
     }, {
         key: 'init',
         value: function init() {
-            deb(u);
             this.elems = [];
             u('body').children().each(this.cacheElems.bind(this));
 
             if (debug) {
                 this.elems.forEach(function (el) {
-                    el.elem.attr('style', 'border: 2px solid red');
+                    el.elem.style.border = '2px solid red';
                 });
             }
+
+            this.makeFuckers();
         }
     }, {
         key: 'cacheElems',
@@ -9909,22 +10125,40 @@ var Fucker = function () {
             var is_allowed = _.some(this.allowed_nodes, function (t) {
                 return $elem.is(t);
             });
-            deb($elem, elem, has_text, elem.nodeType, 'isallowed', is_allowed);
+            // deb($elem, elem, has_text, elem.nodeName, 'isallowed', is_allowed)
             if (has_text || is_allowed) {
                 this.elems.push({
-                    elem: $elem
+                    type: _.lowerCase(elem.nodeName),
+                    $elem: $elem,
+                    elem: elem
                 });
             }
-            u($elem).children().each(this.cacheElems.bind(this));
+            $elem.children().each(this.cacheElems.bind(this));
+        }
+    }, {
+        key: 'makeFuckers',
+        value: function makeFuckers() {
+            var _this = this;
+
+            this.elems.forEach(function (el) {
+                var fucker_list = _.filter(_this.fucker_list, { type: el.type });
+                fucker_list = _.union(fucker_list, _.filter(_this.fucker_list, { type: 'all' }));
+                var fucker_type = _.sample(fucker_list);
+                if (fucker_type) {
+                    var fucker = new Fucker(el.$elem, el.type, fucker_type);
+                    _this.fuckers.push(fucker);
+                    fucker.mount();
+                }
+            });
         }
     }]);
 
-    return Fucker;
+    return FuckItUp;
 }();
 
-window.FuckItUp = Fucker;
+window.FuckItUp = FuckItUp;
 
-module.exports = Fucker;
+module.exports = FuckItUp;
 
 /***/ }),
 

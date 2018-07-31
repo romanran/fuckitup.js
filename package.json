@@ -4,7 +4,7 @@
   "description": "fuckitup.js",
   "main": "index.js",
   "scripts": {
-    "start": "webpack --config webpack.config.js --watch"
+    "start": "cross-env NODE_ENV=development webpack --config webpack.config.js --watch"
   },
   "repository": {
     "type": "git",
@@ -24,8 +24,10 @@
     "babel-env": "^2.4.1",
     "babel-loader": "^7.1.5",
     "clean-webpack-plugin": "^0.1.19",
+    "cross-env": "^5.2.0",
     "css-loader": "^1.0.0",
     "friendly-errors-webpack-plugin": "^1.7.0",
+    "less": "^3.8.0",
     "less-loader": "^4.1.0",
     "mini-css-extract-plugin": "^0.4.1",
     "webpack": "^4.16.3",
