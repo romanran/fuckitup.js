@@ -8,13 +8,13 @@ module.exports = {
         } else {
             f_size = _.random(30, 60)
         }
-
+        this.prev_style = this.$wrap.attr('style')
         this.$wrap.attr('style', `font-size: ${f_size}px`)
     },
     start: function(e) {
 
     },
     stop: function() {
-
+        this.$wrap.attr('style', this.prev_style)
     },
 }

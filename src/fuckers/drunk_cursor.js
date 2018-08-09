@@ -21,15 +21,24 @@ module.exports = {
         this.random_y = 0
         this.last_random_x = Date.now()
         this.last_random_y = Date.now()
+        this.next_trigger_delay = {
+            x: 0,
+            y: 0
+        }
+        this.active = 1
     },
     start: function(e) {
-        if (Date.now() - this.last_random_x > _.random(1000, 4000)) {
+        if (!this.active) return 0
+        if (Date.now() - this.last_random_x > this.next_trigger_delay.x) {
             this.random_x = _.random(-50, 50)
             this.last_random_x = Date.now()
+            this.next_trigger_delay.x = _.random(200, 2000)
         }
-        if (Date.now() - this.last_random_y > _.random(1000, 4000)) {
+        if (Date.now() - this.last_random_y > this.next_trigger_delay.y) {
             this.random_y = _.random(-50, 50)
             this.last_random_y = Date.now()
+            this.next_trigger_delay.y = _.random(200, 2000)
+
         }
         const target_x = this.parent.utils.mouse_pos.x + this.random_x
         const target_y = this.parent.utils.mouse_pos.y + this.random_y
@@ -39,6 +48,8 @@ module.exports = {
         this.prev_time = Date.now()
     },
     stop: function() {
-
+        this.active = 0
+        this.$wrap.removeClass('fuck-cursor')
+        this.$cursor.remove()
     },
 }

@@ -15,7 +15,7 @@ class Fucker {
         this.addListeners()
     }
     addListeners() {
-        this.fucker.init &&this.fucker.init.call(this)
+        this.fucker.init && this.fucker.init.call(this)
         const triggers = {
             load: () => {
                 document.addEventListener('DOMContentLoaded', this.fucker.start.bind(this))

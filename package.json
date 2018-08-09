@@ -19,7 +19,8 @@
   "dependencies": {
     "lodash": "^4.17.10",
     "node-pid-controller": "^1.0.1",
-    "umbrellajs": "^2.10.3"
+    "umbrellajs": "^2.10.3",
+    "zenscroll": "^4.0.2"
   },
   "devDependencies": {
     "babel-env": "^2.4.1",
