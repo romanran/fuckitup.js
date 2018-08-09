@@ -32,8 +32,11 @@ module.exports = {
                         loader: 'less-loader',
                         options: {
                             strictMath: true,
-                            noIeCompat: true
+                            noIeCompat: true,
                         }
+                    },
+                    {
+                        loader: 'import-glob'
                     }
                 ]
             },
@@ -52,7 +55,10 @@ module.exports = {
     },
     devtool: 'source-map',
     plugins: [
-        new WebpackNotifierPlugin({alwaysNotify: 0,skipFirstNotification: true}),
+        new WebpackNotifierPlugin({
+            alwaysNotify: 0,
+            skipFirstNotification: true
+        }),
         new CleanWebpackPlugin('./dist'),
         new MiniCssExtractPlugin({
             filename: 'fuckitup.css',
