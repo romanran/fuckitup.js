@@ -9963,8 +9963,10 @@ module.exports = {
         this.random_y = 0;
         this.last_random_x = Date.now();
         this.last_random_y = Date.now();
+        this.active = 1;
     },
     start: function start(e) {
+        if (!this.active) return 0;
         if (Date.now() - this.last_random_x > _.random(1000, 4000)) {
             this.random_x = _.random(-50, 50);
             this.last_random_x = Date.now();
@@ -9980,7 +9982,9 @@ module.exports = {
         this.$cursor.attr('style', 'left: ' + _.toSafeInteger(this.fake_pos.x) + 'px; top: ' + _.toSafeInteger(this.fake_pos.y) + 'px;');
         this.prev_time = Date.now();
     },
-    stop: function stop() {}
+    stop: function stop() {
+        this.active = 0;
+    }
 };
 
 /***/ }),
@@ -10005,11 +10009,13 @@ module.exports = {
         } else {
             f_size = _.random(30, 60);
         }
-
+        this.prev_style = this.$wrap.attr('style');
         this.$wrap.attr('style', 'font-size: ' + f_size + 'px');
     },
     start: function start(e) {},
-    stop: function stop() {}
+    stop: function stop() {
+        this.$wrap.attr('style', this.prev_style);
+    }
 };
 
 /***/ }),
@@ -10141,16 +10147,20 @@ module.exports = {
         if (this.type === 'body') {
             return 0;
         }
-        this.$wrap.addClass(_.sample(['blaaargh', 'blaaargh--reverse']));
+        this.added_class = _.sample(['blaaargh', 'blaaargh--reverse']);
+        this.$wrap.addClass(this.added_class);
         var origin = {
             h: _.sample(['left', 'right', 'center'])
         };
         origin.v = origin.h === 'center' ? '' : _.sample(['top', 'bottom', 'center']);
-
+        this.prev_style = this.$wrap.attr('style');
         this.$wrap.attr('style', 'transform-origin: ' + origin.h + ' ' + origin.v + '; animation-duration: ' + _.random(200, 3000) + 'ms;');
     },
     start: function start() {},
-    stop: function stop() {}
+    stop: function stop() {
+        this.$wrap.removeClass(this.added_class);
+        this.$wrap.attr('style', this.prev_style);
+    }
 };
 
 /***/ }),

@@ -21,8 +21,10 @@ module.exports = {
         this.random_y = 0
         this.last_random_x = Date.now()
         this.last_random_y = Date.now()
+        this.active = 1
     },
     start: function(e) {
+        if (!this.active) return 0
         if (Date.now() - this.last_random_x > _.random(1000, 4000)) {
             this.random_x = _.random(-50, 50)
             this.last_random_x = Date.now()
@@ -39,6 +41,6 @@ module.exports = {
         this.prev_time = Date.now()
     },
     stop: function() {
-
+        this.active = 0
     },
 }

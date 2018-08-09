@@ -28,7 +28,7 @@
         "type": "body"
     },
     {
-        "name": "Spinner",
+        "name": "Spinning blaaurgh",
         "severity": 2,
         "module": "spinner",
         "trigger": "load",
@@ -39,6 +39,13 @@
         "severity": 1,
         "module": "font_fucker",
         "trigger": "load",
+        "type": "all"
+    },
+    {
+        "name": "Random scroller",
+        "severity": 1,
+        "module": "scroller",
+        "trigger": "frame",
         "type": "all"
     }
 ]
