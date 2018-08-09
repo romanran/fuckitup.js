@@ -33,5 +33,12 @@
         "module": "spinner",
         "trigger": "load",
         "type": "all"
+    },
+    {
+        "name": "Font fucker",
+        "severity": 1,
+        "module": "font_fucker",
+        "trigger": "load",
+        "type": "all"
     }
 ]

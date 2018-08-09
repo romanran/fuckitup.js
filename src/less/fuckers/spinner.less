@@ -1,8 +1,12 @@
 .blaaargh {
-    animation: spinner;
-    animation-duration: 1000ms;
+    animation-name: spinner;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
+}
+
+.blaaargh--reverse {
+    .blaaargh;
+    animation-name: spinner-r;
 }
 
 @keyframes spinner {
@@ -10,6 +14,15 @@
         transform: rotateZ(0deg)
     }
     100% {
+        transform: rotateZ(360deg)
+    }
+}
+
+@keyframes spinner-r {
+    100% {
+        transform: rotateZ(0deg)
+    }
+    0% {
         transform: rotateZ(360deg)
     }
 }

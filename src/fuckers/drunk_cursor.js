@@ -1,4 +1,4 @@
-const {u} = require('umbrellajs')
+const _ = require('lodash')
 
 module.exports = {
     init: function() {

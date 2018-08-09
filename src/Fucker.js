@@ -6,6 +6,7 @@ const fuckers = {
     img_joker: require('./fuckers/img_joker'),
     drunk_cursor: require('./fuckers/drunk_cursor'),
     spinner: require('./fuckers/spinner'),
+    font_fucker: require('./fuckers/font_fucker'),
 }
 
 class Fucker {
