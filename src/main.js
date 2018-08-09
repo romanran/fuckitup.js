@@ -7,6 +7,10 @@ const fuckers_json = require('./fuckers')
 const debug = process.env.NODE_ENV === 'development'
 window.deb = debug ? console.log : function(){}
 
+const branch = debug ? 'develop' : 'master'
+
+u(document.head).append(`<link rel="stylesheet" href="https://rawgit.com/romanran/fuckitup.js/${branch}/dist/fuckitup.css">`)
+
 const fuckers = {
     spacer: require('./fuckers/spacer'),
     img_fucker: require('./fuckers/img_fucker'),

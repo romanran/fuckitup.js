@@ -10618,6 +10618,10 @@ var fuckers_json = __webpack_require__(/*! ./fuckers */ "./src/fuckers.json");
 var debug = "development" === 'development';
 window.deb = debug ? console.log : function () {};
 
+var branch = debug ? 'develop' : 'master';
+
+u(document.head).append('<link rel="stylesheet" href="https://rawgit.com/romanran/fuckitup.js/' + branch + '/dist/fuckitup.css">');
+
 var fuckers = {
     spacer: __webpack_require__(/*! ./fuckers/spacer */ "./src/fuckers/spacer.js"),
     img_fucker: __webpack_require__(/*! ./fuckers/img_fucker */ "./src/fuckers/img_fucker.js"),
