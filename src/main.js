@@ -2,7 +2,6 @@ const Fucker = require('./Fucker')
 const {u} = require('umbrellajs')
 const _ = require('lodash')
 require('./less/main.less')
-require('./less/fuckers/*')
 const fuckers = require('./fuckers')
 
 window._ = _

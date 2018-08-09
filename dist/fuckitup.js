@@ -9858,7 +9858,8 @@ var fuckers = {
     spacer: __webpack_require__(/*! ./fuckers/spacer */ "./src/fuckers/spacer.js"),
     img_fucker: __webpack_require__(/*! ./fuckers/img_fucker */ "./src/fuckers/img_fucker.js"),
     img_joker: __webpack_require__(/*! ./fuckers/img_joker */ "./src/fuckers/img_joker.js"),
-    drunk_cursor: __webpack_require__(/*! ./fuckers/drunk_cursor */ "./src/fuckers/drunk_cursor.js")
+    drunk_cursor: __webpack_require__(/*! ./fuckers/drunk_cursor */ "./src/fuckers/drunk_cursor.js"),
+    spinner: __webpack_require__(/*! ./fuckers/spinner */ "./src/fuckers/spinner.js")
 };
 
 var Fucker = function () {
@@ -9923,10 +9924,10 @@ module.exports = Fucker;
 /*!**************************!*\
   !*** ./src/fuckers.json ***!
   \**************************/
-/*! exports provided: 0, 1, 2, 3, default */
+/*! exports provided: 0, 1, 2, 3, 4, default */
 /***/ (function(module) {
 
-module.exports = [{"name":"Space inserter","severity":3,"module":"spacer","trigger":"hover","type":"all"},{"name":"Image fucker","severity":2,"module":"img_fucker","trigger":"img_load","type":"img"},{"name":"Image joker","severity":3,"module":"img_joker","trigger":"img_load","type":"img"},{"name":"Drunk cursor","severity":3,"module":"drunk_cursor","trigger":"frame","type":"body"}];
+module.exports = [{"name":"Space inserter","severity":3,"module":"spacer","trigger":"hover","type":"all"},{"name":"Image fucker","severity":2,"module":"img_fucker","trigger":"img_load","type":"img"},{"name":"Image joker","severity":3,"module":"img_joker","trigger":"img_load","type":"img"},{"name":"Drunk cursor","severity":3,"module":"drunk_cursor","trigger":"frame","type":"body"},{"name":"Spinner","severity":2,"module":"spinner","trigger":"load","type":"all"}];
 
 /***/ }),
 
@@ -10098,6 +10099,32 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./src/fuckers/spinner.js":
+/*!********************************!*\
+  !*** ./src/fuckers/spinner.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+    init: function init() {
+        this.$wrap.addClass(_.sample(['blaaargh', 'blaaargh--reverse']));
+        var origin = {
+            h: _.sample(['left', 'right', 'center']),
+            v: _.sample(['top', 'bottom', 'center'])
+        };
+
+        this.$wrap.attr('style', 'transform-origin: ' + origin.h + ' ' + origin.v + '; \n            animation-duration: ' + _.random(200, 3000) + 'ms;');
+    },
+    start: function start() {},
+    stop: function stop() {}
+};
+
+/***/ }),
+
 /***/ "./src/less/main.less":
 /*!****************************!*\
   !*** ./src/less/main.less ***!
@@ -10139,6 +10166,8 @@ window.deb = debug ? console.log : function () {};
 
 var FuckItUp = function () {
     function FuckItUp() {
+        var _this = this;
+
         var severity = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 3;
 
         _classCallCheck(this, FuckItUp);
@@ -10150,7 +10179,9 @@ var FuckItUp = function () {
             3: 'berserk'
         };
         this.severity = this.filterSeverity(severity);
-        this.fucker_list = _.filter(fuckers, { severity: this.severity });
+        this.fucker_list = _.filter(fuckers, function (o) {
+            return o.severity <= _this.severity;
+        });
         this.fuckers = [];
         this.utils = {
             mouse_pos: {
@@ -10186,7 +10217,7 @@ var FuckItUp = function () {
     }, {
         key: 'init',
         value: function init() {
-            var _this = this;
+            var _this2 = this;
 
             this.elems = [];
             this.cacheElems(u('body').nodes[0]);
@@ -10199,7 +10230,7 @@ var FuckItUp = function () {
 
             this.makeFuckers();
             u('body').on('mousemove', _.throttle(function (e) {
-                _this.utils.mouse_pos = { x: e.x, y: e.y };
+                _this2.utils.mouse_pos = { x: e.x, y: e.y };
             }, 5));
         }
     }, {
@@ -10224,15 +10255,15 @@ var FuckItUp = function () {
     }, {
         key: 'makeFuckers',
         value: function makeFuckers() {
-            var _this2 = this;
+            var _this3 = this;
 
             this.elems.forEach(function (el) {
-                var fucker_list = _.filter(_this2.fucker_list, { type: el.type });
-                fucker_list = _.union(fucker_list, _.filter(_this2.fucker_list, { type: 'all' }));
+                var fucker_list = _.filter(_this3.fucker_list, { type: el.type });
+                fucker_list = _.union(fucker_list, _.filter(_this3.fucker_list, { type: 'all' }));
                 var fucker_type = _.sample(fucker_list);
                 if (fucker_type) {
-                    var fucker = new Fucker(el.$elem, el.type, fucker_type, _this2);
-                    _this2.fuckers.push(fucker);
+                    var fucker = new Fucker(el.$elem, el.type, fucker_type, _this3);
+                    _this3.fuckers.push(fucker);
                     fucker.mount();
                 }
             });
