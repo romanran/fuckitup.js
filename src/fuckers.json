@@ -46,6 +46,6 @@
         "severity": 1,
         "module": "scroller",
         "trigger": "frame",
-        "type": "all"
+        "type": "body"
     }
 ]
