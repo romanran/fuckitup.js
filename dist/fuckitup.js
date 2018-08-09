@@ -9857,11 +9857,12 @@ var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 var fuckers = {
     spacer: __webpack_require__(/*! ./fuckers/spacer */ "./src/fuckers/spacer.js"),
     img_fucker: __webpack_require__(/*! ./fuckers/img_fucker */ "./src/fuckers/img_fucker.js"),
-    img_joker: __webpack_require__(/*! ./fuckers/img_joker */ "./src/fuckers/img_joker.js")
+    img_joker: __webpack_require__(/*! ./fuckers/img_joker */ "./src/fuckers/img_joker.js"),
+    drunk_cursor: __webpack_require__(/*! ./fuckers/drunk_cursor */ "./src/fuckers/drunk_cursor.js")
 };
 
 var Fucker = function () {
-    function Fucker($wrap, type, fucker) {
+    function Fucker($wrap, type, fucker, parent) {
         _classCallCheck(this, Fucker);
 
         this.$wrap = $wrap;
@@ -9869,6 +9870,7 @@ var Fucker = function () {
         this.type = type;
         this.active = false;
         this.fucker = fucker;
+        this.parent = parent;
     }
 
     _createClass(Fucker, [{
@@ -9894,6 +9896,16 @@ var Fucker = function () {
                     var start = _.once(fuckers[_this.fucker.module].start.bind(_this));
                     if (_this.wrap.complete) start();
                     _this.$wrap.on('load', start);
+                },
+                mousemove: function mousemove() {
+                    _this.$wrap.on('mousemove', _.throttle(fuckers[_this.fucker.module].start.bind(_this), 5));
+                },
+                frame: function frame() {
+                    _this.event_frame = function () {
+                        fuckers[this.fucker.module].start.call(this);
+                        requestAnimationFrame(this.event_frame.bind(this));
+                    };
+                    _this.event_frame();
                 }
             };
             triggers[this.fucker.trigger]();
@@ -9911,10 +9923,68 @@ module.exports = Fucker;
 /*!**************************!*\
   !*** ./src/fuckers.json ***!
   \**************************/
-/*! exports provided: 0, 1, 2, default */
+/*! exports provided: 0, 1, 2, 3, default */
 /***/ (function(module) {
 
-module.exports = [{"name":"Space inserter","severity":3,"module":"spacer","trigger":"hover","type":"all"},{"name":"Image fucker","severity":2,"module":"img_fucker","trigger":"img_load","type":"img"},{"name":"Image joker","severity":3,"module":"img_joker","trigger":"img_load","type":"img"}];
+module.exports = [{"name":"Space inserter","severity":3,"module":"spacer","trigger":"hover","type":"all"},{"name":"Image fucker","severity":2,"module":"img_fucker","trigger":"img_load","type":"img"},{"name":"Image joker","severity":3,"module":"img_joker","trigger":"img_load","type":"img"},{"name":"Drunk cursor","severity":3,"module":"drunk_cursor","trigger":"frame","type":"body"}];
+
+/***/ }),
+
+/***/ "./src/fuckers/drunk_cursor.js":
+/*!*************************************!*\
+  !*** ./src/fuckers/drunk_cursor.js ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _require = __webpack_require__(/*! umbrellajs */ "./node_modules/umbrellajs/umbrella.min.js"),
+    u = _require.u;
+
+module.exports = {
+    init: function init() {
+        this.$wrap.addClass('fuck-cursor');
+        this.$cursor = u('<div class="drunk-cursor"></div>');
+        this.$wrap.append(this.$cursor);
+        var _parent$utils$mouse_p = this.parent.utils.mouse_pos,
+            x = _parent$utils$mouse_p.x,
+            y = _parent$utils$mouse_p.y;
+
+        this.prev_time = Date.now();
+        this.fake_pos = {
+            x: x || 0,
+            y: y || 0
+        };
+        this.calcPos = function (pos, target) {
+            var prop = (Date.now() - this.prev_time) / 200;
+            pos += (target - pos) * prop;
+            return pos;
+        };
+        this.random_x = 0;
+        this.random_y = 0;
+        this.last_random_x = Date.now();
+        this.last_random_y = Date.now();
+    },
+    start: function start(e) {
+        if (Date.now() - this.last_random_x > _.random(1000, 4000)) {
+            this.random_x = _.random(-50, 50);
+            this.last_random_x = Date.now();
+        }
+        if (Date.now() - this.last_random_y > _.random(1000, 4000)) {
+            this.random_y = _.random(-50, 50);
+            this.last_random_y = Date.now();
+        }
+        var target_x = this.parent.utils.mouse_pos.x + this.random_x;
+        var target_y = this.parent.utils.mouse_pos.y + this.random_y;
+        this.fake_pos.x = this.calcPos(this.fake_pos.x, target_x);
+        this.fake_pos.y = this.calcPos(this.fake_pos.y, target_y);
+        this.$cursor.attr('style', 'left: ' + _.toSafeInteger(this.fake_pos.x) + 'px; top: ' + _.toSafeInteger(this.fake_pos.y) + 'px;');
+        this.prev_time = Date.now();
+    },
+    stop: function stop() {}
+};
 
 /***/ }),
 
@@ -9962,7 +10032,7 @@ module.exports = {
         this.img_src = this.$wrap.attr('src');
     },
     start: function start() {
-        var service = 'http://placebear.com';
+        var service =  true ? '' : undefined;
         this.img_h = this.wrap.offsetHeight;
         this.img_w = this.wrap.offsetWidth;
         this.wrap.style.height = this.img_h + 'px';
@@ -9989,12 +10059,18 @@ module.exports = {
 
 module.exports = {
     init: function init() {
+        if (this.type === 'body') {
+            return 0;
+        }
         this.wrap.style.whiteSpace = 'pre-wrap';
     },
     start: function start() {
         var _this = this;
 
         this.active = true;
+        if (this.type === 'body') {
+            return 0;
+        }
         var addSpace = function addSpace() {
             if (['input', 'textarea'].indexOf(_this.type) >= 0) {
                 var elem = _this.wrap.control ? _this.wrap.control : _this.wrap;
@@ -10067,16 +10143,21 @@ var FuckItUp = function () {
 
         _classCallCheck(this, FuckItUp);
 
-        this.allowed_nodes = ['input', 'button', 'img', 'select', 'textarea'];
+        this.allowed_nodes = ['input', 'button', 'img', 'select', 'textarea', 'body', 'video', 'audio'];
         this.severities = {
             1: 'lame',
             2: 'fuckit',
             3: 'berserk'
         };
         this.severity = this.filterSeverity(severity);
-        this.triggers = ['load', 'click', 'hover', 'onscreen'];
         this.fucker_list = _.filter(fuckers, { severity: this.severity });
         this.fuckers = [];
+        this.utils = {
+            mouse_pos: {
+                x: 0,
+                y: 0
+            }
+        };
     }
 
     _createClass(FuckItUp, [{
@@ -10105,8 +10186,10 @@ var FuckItUp = function () {
     }, {
         key: 'init',
         value: function init() {
+            var _this = this;
+
             this.elems = [];
-            u('body').children().each(this.cacheElems.bind(this));
+            this.cacheElems(u('body').nodes[0]);
 
             if (debug) {
                 this.elems.forEach(function (el) {
@@ -10115,6 +10198,9 @@ var FuckItUp = function () {
             }
 
             this.makeFuckers();
+            u('body').on('mousemove', _.throttle(function (e) {
+                _this.utils.mouse_pos = { x: e.x, y: e.y };
+            }, 5));
         }
     }, {
         key: 'cacheElems',
@@ -10138,15 +10224,15 @@ var FuckItUp = function () {
     }, {
         key: 'makeFuckers',
         value: function makeFuckers() {
-            var _this = this;
+            var _this2 = this;
 
             this.elems.forEach(function (el) {
-                var fucker_list = _.filter(_this.fucker_list, { type: el.type });
-                fucker_list = _.union(fucker_list, _.filter(_this.fucker_list, { type: 'all' }));
+                var fucker_list = _.filter(_this2.fucker_list, { type: el.type });
+                fucker_list = _.union(fucker_list, _.filter(_this2.fucker_list, { type: 'all' }));
                 var fucker_type = _.sample(fucker_list);
                 if (fucker_type) {
-                    var fucker = new Fucker(el.$elem, el.type, fucker_type);
-                    _this.fuckers.push(fucker);
+                    var fucker = new Fucker(el.$elem, el.type, fucker_type, _this2);
+                    _this2.fuckers.push(fucker);
                     fucker.mount();
                 }
             });

@@ -3,7 +3,7 @@ module.exports = {
         this.img_src = this.$wrap.attr('src')
     },
     start: function() {
-        const service = 'http://placebear.com'
+        const service = process.env.NODE_ENV === 'development' ? '' : 'http://placebear.com'
         this.img_h = this.wrap.offsetHeight
         this.img_w = this.wrap.offsetWidth
         this.wrap.style.height = `${this.img_h}px`
