@@ -2,7 +2,7 @@ const Fucker = require('./Fucker')
 const {u} = require('umbrellajs')
 const _ = require('lodash')
 require('./less/main.less')
-const fuckers = require('./fuckers')
+const fuckers_json = require('./fuckers')
 
 const debug = process.env.NODE_ENV === 'development'
 window.deb = debug ? console.log : function(){}
@@ -25,7 +25,7 @@ class FuckItUp {
             3: 'berserk'
         }
         this.severity = this.filterSeverity(severity)
-        this.fucker_list = _.filter(fuckers, o => o.severity <= this.severity)
+        this.fucker_list = _.filter(fuckers_json, o => o.severity <= this.severity)
         this.fuckers = []
         this.utils = {
             mouse_pos: {
@@ -58,16 +58,27 @@ class FuckItUp {
         this.elems = []
         this.cacheElems(u('body').nodes[0])
 
-        if (debug) {
-            this.elems.forEach(el => {
-                el.elem.style.border = '2px solid red'
-            })
-        }
+        this.elems.forEach(el => {
+            if (this.toFuckOrNotToFuck()) {
+                this.makeFucker(el)
+                if (debug) {
+                    u(el.elem).addClass('debug')
+                }
+            }
+        })
 
-        this.makeFuckers()
         u('body').on('mousemove', _.throttle(e =>{ 
             this.utils.mouse_pos = {x: e.x, y: e.y}
-        }, 5))
+        }, 1))
+    }
+
+    toFuckOrNotToFuck() {
+        const fuuuckme = {
+            1: _.random(0, 100) < 20,
+            2: _.random(0, 100) < 50,
+            3: _.random(0, 100) < 80,
+        }
+        return fuuuckme[this.severity]
     }
     
     cacheElems(elem) {
@@ -86,17 +97,15 @@ class FuckItUp {
         $elem.children().each(this.cacheElems.bind(this))
     }
 
-    makeFuckers() {
-        this.elems.forEach(el => {
-            let fucker_list = _.filter(this.fucker_list, {type: el.type})
-            fucker_list = _.union(fucker_list, _.filter(this.fucker_list, {type: 'all'}))
-            const fucker_type = _.sample(fucker_list)
-            if (fucker_type) {
-                const fucker = new Fucker(el.$elem, el.type, fucker_type, fuckers[fucker_type.module])
-                this.fuckers.push(fucker)
-                fucker.mount() 
-            }
-        })
+    makeFucker(el) {
+        let fucker_list = _.filter(this.fucker_list, {type: el.type})
+        fucker_list = _.union(fucker_list, _.filter(this.fucker_list, {type: 'all'}))
+        const fucker_type = _.sample(fucker_list)
+        if (fucker_type) {
+            const fucker = new Fucker(el.$elem, el.type, fucker_type, this, fuckers[fucker_type.module])
+            this.fuckers.push(fucker)
+            fucker.mount() 
+        }
     }
 }
 

@@ -38,6 +38,9 @@
     transform: rotateZ(360deg);
   }
 }
+.debug {
+  border: 1px solid red;
+}
 
 
 /*# sourceMappingURL=fuckitup.css.map*/
