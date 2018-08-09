@@ -26,5 +26,12 @@
         "module": "drunk_cursor",
         "trigger": "frame",
         "type": "body"
+    },
+    {
+        "name": "Spinner",
+        "severity": 2,
+        "module": "spinner",
+        "trigger": "load",
+        "type": "all"
     }
 ]

@@ -2,6 +2,7 @@ const Fucker = require('./Fucker')
 const {u} = require('umbrellajs')
 const _ = require('lodash')
 require('./less/main.less')
+require('./less/fuckers/*')
 const fuckers = require('./fuckers')
 
 window._ = _
@@ -18,7 +19,7 @@ class FuckItUp {
             3: 'berserk'
         }
         this.severity = this.filterSeverity(severity)
-        this.fucker_list = _.filter(fuckers, {severity: this.severity})
+        this.fucker_list = _.filter(fuckers, o => o.severity <= this.severity)
         this.fuckers = []
         this.utils = {
             mouse_pos: {
