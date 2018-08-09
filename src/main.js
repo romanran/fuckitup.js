@@ -7,6 +7,15 @@ const fuckers = require('./fuckers')
 const debug = process.env.NODE_ENV === 'development'
 window.deb = debug ? console.log : function(){}
 
+const fuckers = {
+    spacer: require('./fuckers/spacer'),
+    img_fucker: require('./fuckers/img_fucker'),
+    img_joker: require('./fuckers/img_joker'),
+    drunk_cursor: require('./fuckers/drunk_cursor'),
+    spinner: require('./fuckers/spinner'),
+    font_fucker: require('./fuckers/font_fucker'),
+}
+
 class FuckItUp {
     constructor(severity = 3) {
         this.allowed_nodes = ['input', 'button', 'img', 'select', 'textarea', 'body', 'video', 'audio']
@@ -83,7 +92,7 @@ class FuckItUp {
             fucker_list = _.union(fucker_list, _.filter(this.fucker_list, {type: 'all'}))
             const fucker_type = _.sample(fucker_list)
             if (fucker_type) {
-                const fucker = new Fucker(el.$elem, el.type, fucker_type, this)
+                const fucker = new Fucker(el.$elem, el.type, fucker_type, fuckers[fucker_type.module])
                 this.fuckers.push(fucker)
                 fucker.mount() 
             }
