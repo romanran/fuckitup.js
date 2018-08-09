@@ -9859,7 +9859,8 @@ var fuckers = {
     img_fucker: __webpack_require__(/*! ./fuckers/img_fucker */ "./src/fuckers/img_fucker.js"),
     img_joker: __webpack_require__(/*! ./fuckers/img_joker */ "./src/fuckers/img_joker.js"),
     drunk_cursor: __webpack_require__(/*! ./fuckers/drunk_cursor */ "./src/fuckers/drunk_cursor.js"),
-    spinner: __webpack_require__(/*! ./fuckers/spinner */ "./src/fuckers/spinner.js")
+    spinner: __webpack_require__(/*! ./fuckers/spinner */ "./src/fuckers/spinner.js"),
+    font_fucker: __webpack_require__(/*! ./fuckers/font_fucker */ "./src/fuckers/font_fucker.js")
 };
 
 var Fucker = function () {
@@ -9924,10 +9925,10 @@ module.exports = Fucker;
 /*!**************************!*\
   !*** ./src/fuckers.json ***!
   \**************************/
-/*! exports provided: 0, 1, 2, 3, 4, default */
+/*! exports provided: 0, 1, 2, 3, 4, 5, default */
 /***/ (function(module) {
 
-module.exports = [{"name":"Space inserter","severity":3,"module":"spacer","trigger":"hover","type":"all"},{"name":"Image fucker","severity":2,"module":"img_fucker","trigger":"img_load","type":"img"},{"name":"Image joker","severity":3,"module":"img_joker","trigger":"img_load","type":"img"},{"name":"Drunk cursor","severity":3,"module":"drunk_cursor","trigger":"frame","type":"body"},{"name":"Spinner","severity":2,"module":"spinner","trigger":"load","type":"all"}];
+module.exports = [{"name":"Space inserter","severity":3,"module":"spacer","trigger":"hover","type":"all"},{"name":"Image fucker","severity":2,"module":"img_fucker","trigger":"img_load","type":"img"},{"name":"Image joker","severity":3,"module":"img_joker","trigger":"img_load","type":"img"},{"name":"Drunk cursor","severity":3,"module":"drunk_cursor","trigger":"frame","type":"body"},{"name":"Spinner","severity":2,"module":"spinner","trigger":"load","type":"all"},{"name":"Font fucker","severity":1,"module":"font_fucker","trigger":"load","type":"all"}];
 
 /***/ }),
 
@@ -9941,8 +9942,7 @@ module.exports = [{"name":"Space inserter","severity":3,"module":"spacer","trigg
 "use strict";
 
 
-var _require = __webpack_require__(/*! umbrellajs */ "./node_modules/umbrellajs/umbrella.min.js"),
-    u = _require.u;
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 
 module.exports = {
     init: function init() {
@@ -9984,6 +9984,35 @@ module.exports = {
         this.$cursor.attr('style', 'left: ' + _.toSafeInteger(this.fake_pos.x) + 'px; top: ' + _.toSafeInteger(this.fake_pos.y) + 'px;');
         this.prev_time = Date.now();
     },
+    stop: function stop() {}
+};
+
+/***/ }),
+
+/***/ "./src/fuckers/font_fucker.js":
+/*!************************************!*\
+  !*** ./src/fuckers/font_fucker.js ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+
+module.exports = {
+    init: function init() {
+        var f_size = 0;
+        if (_.random(0, 1)) {
+            f_size = _.random(4, 10);
+        } else {
+            f_size = _.random(30, 60);
+        }
+
+        this.$wrap.attr('style', 'font-size: ' + f_size + 'px');
+    },
+    start: function start(e) {},
     stop: function stop() {}
 };
 
@@ -10109,15 +10138,20 @@ module.exports = {
 "use strict";
 
 
+var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
+
 module.exports = {
     init: function init() {
+        if (this.type === 'body') {
+            return 0;
+        }
         this.$wrap.addClass(_.sample(['blaaargh', 'blaaargh--reverse']));
         var origin = {
-            h: _.sample(['left', 'right', 'center']),
-            v: _.sample(['top', 'bottom', 'center'])
+            h: _.sample(['left', 'right', 'center'])
         };
+        origin.v = origin.h === 'center' ? '' : _.sample(['top', 'bottom', 'center']);
 
-        this.$wrap.attr('style', 'transform-origin: ' + origin.h + ' ' + origin.v + '; \n            animation-duration: ' + _.random(200, 3000) + 'ms;');
+        this.$wrap.attr('style', 'transform-origin: ' + origin.h + ' ' + origin.v + '; animation-duration: ' + _.random(200, 3000) + 'ms;');
     },
     start: function start() {},
     stop: function stop() {}
@@ -10159,8 +10193,6 @@ var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 __webpack_require__(/*! ./less/main.less */ "./src/less/main.less");
 var fuckers = __webpack_require__(/*! ./fuckers */ "./src/fuckers.json");
 
-window._ = _;
-
 var debug = "development" === 'development';
 window.deb = debug ? console.log : function () {};
 
@@ -10174,8 +10206,8 @@ var FuckItUp = function () {
 
         this.allowed_nodes = ['input', 'button', 'img', 'select', 'textarea', 'body', 'video', 'audio'];
         this.severities = {
-            1: 'lame',
-            2: 'fuckit',
+            1: 'kitten',
+            2: 'spaghetti',
             3: 'berserk'
         };
         this.severity = this.filterSeverity(severity);

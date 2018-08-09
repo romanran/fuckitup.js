@@ -4,8 +4,6 @@ const _ = require('lodash')
 require('./less/main.less')
 const fuckers = require('./fuckers')
 
-window._ = _
-
 const debug = process.env.NODE_ENV === 'development'
 window.deb = debug ? console.log : function(){}
 
@@ -13,8 +11,8 @@ class FuckItUp {
     constructor(severity = 3) {
         this.allowed_nodes = ['input', 'button', 'img', 'select', 'textarea', 'body', 'video', 'audio']
         this.severities = {
-            1: 'lame',
-            2: 'fuckit',
+            1: 'kitten',
+            2: 'spaghetti',
             3: 'berserk'
         }
         this.severity = this.filterSeverity(severity)
