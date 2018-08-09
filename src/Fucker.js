@@ -3,16 +3,18 @@ const _ = require('lodash')
 const fuckers = {
     spacer: require('./fuckers/spacer'),
     img_fucker: require('./fuckers/img_fucker'),
-    img_joker: require('./fuckers/img_joker')
+    img_joker: require('./fuckers/img_joker'),
+    drunk_cursor: require('./fuckers/drunk_cursor'),
 }
 
 class Fucker {
-    constructor($wrap, type, fucker) {
+    constructor($wrap, type, fucker, parent) {
         this.$wrap = $wrap
         this.wrap = $wrap.nodes[0]
         this.type = type
         this.active = false
         this.fucker = fucker
+        this.parent = parent
     }
     mount() {
         this.addListeners()
@@ -31,6 +33,16 @@ class Fucker {
                 const start = _.once(fuckers[this.fucker.module].start.bind(this))
                 if (this.wrap.complete) start()
                 this.$wrap.on('load', start)
+            },
+            mousemove: () => {
+                this.$wrap.on('mousemove', _.throttle(fuckers[this.fucker.module].start.bind(this), 5))
+            },
+            frame: () => {
+                this.event_frame = function() {
+                    fuckers[this.fucker.module].start.call(this)
+                    requestAnimationFrame(this.event_frame.bind(this))
+                }
+                this.event_frame()
             }
         }
         triggers[this.fucker.trigger]()

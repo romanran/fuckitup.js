@@ -19,5 +19,12 @@
         "module": "img_joker",
         "trigger": "img_load",
         "type": "img"
+    },
+    {
+        "name": "Drunk cursor",
+        "severity": 3,
+        "module": "drunk_cursor",
+        "trigger": "frame",
+        "type": "body"
     }
 ]

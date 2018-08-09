@@ -11,16 +11,21 @@ window.deb = debug ? console.log : function(){}
 
 class FuckItUp {
     constructor(severity = 3) {
-        this.allowed_nodes = ['input', 'button', 'img', 'select', 'textarea']
+        this.allowed_nodes = ['input', 'button', 'img', 'select', 'textarea', 'body', 'video', 'audio']
         this.severities = {
             1: 'lame',
             2: 'fuckit',
             3: 'berserk'
         }
         this.severity = this.filterSeverity(severity)
-        this.triggers = ['load', 'click', 'hover', 'onscreen']
         this.fucker_list = _.filter(fuckers, {severity: this.severity})
         this.fuckers = []
+        this.utils = {
+            mouse_pos: {
+                x: 0,
+                y: 0
+            }
+        }
     }
 
     filterSeverity(severity) {
@@ -44,7 +49,7 @@ class FuckItUp {
     
     init() {
         this.elems = []
-        u('body').children().each(this.cacheElems.bind(this))
+        this.cacheElems(u('body').nodes[0])
 
         if (debug) {
             this.elems.forEach(el => {
@@ -53,6 +58,9 @@ class FuckItUp {
         }
 
         this.makeFuckers()
+        u('body').on('mousemove', _.throttle(e =>{ 
+            this.utils.mouse_pos = {x: e.x, y: e.y}
+        }, 5))
     }
     
     cacheElems(elem) {
@@ -77,7 +85,7 @@ class FuckItUp {
             fucker_list = _.union(fucker_list, _.filter(this.fucker_list, {type: 'all'}))
             const fucker_type = _.sample(fucker_list)
             if (fucker_type) {
-                const fucker = new Fucker(el.$elem, el.type, fucker_type)
+                const fucker = new Fucker(el.$elem, el.type, fucker_type, this)
                 this.fuckers.push(fucker)
                 fucker.mount() 
             }

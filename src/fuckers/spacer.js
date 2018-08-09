@@ -1,9 +1,15 @@
 module.exports = {
     init: function() {
+        if (this.type === 'body') {
+            return 0
+        }
         this.wrap.style.whiteSpace = 'pre-wrap'
     },
     start: function() {
         this.active = true
+        if (this.type === 'body') {
+            return 0
+        }
         const addSpace = () => {
             if (['input', 'textarea'].indexOf(this.type) >= 0) {
                 const elem = this.wrap.control ? this.wrap.control : this.wrap
