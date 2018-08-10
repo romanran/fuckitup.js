@@ -4,7 +4,7 @@
         "severity": 3,
         "module": "spacer",
         "trigger": "hover",
-        "type": "all"
+        "type": "text"
     },
     {
         "name": "Image fucker",
@@ -39,7 +39,7 @@
         "severity": 1,
         "module": "font_fucker",
         "trigger": "load",
-        "type": "all"
+        "type": "text"
     },
     {
         "name": "Random scroller",

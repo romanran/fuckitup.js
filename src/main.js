@@ -33,6 +33,12 @@ class FuckItUp {
         }
         this.severity = this.filterSeverity(severity)
         this.fucker_list = _.filter(fuckers_json, o => o.severity <= this.severity)
+        this.fucker_list = _.map(this.fucker_list, o => {
+            if (o.type === 'text') {
+                o.type = ["span", "a", "p", "div", "li", "dt", "dd", "em", "strong", "i", "small", "b", "u", "del", "ins","sub", "sup", "pre", "hr", "address", "footer", "header", 
+                "cite", "small", "s", "q", "nav", "th", "td", "col", "article"]
+            }
+        })
         this.fuckers = []
         this.utils = {
             mouse_pos: {
@@ -106,7 +112,8 @@ class FuckItUp {
     }
 
     makeFucker(el) {
-        let fucker_list = _.filter(this.fucker_list, {type: el.type})
+        let fucker_list = _.filter(this.fucker_list, {type: el.type}) //only with type
+        fucker_list = _.union(fucker_list, _.filter(this.fucker_list, {type: [el.type]})) //one of type in array
         if (el.type !== 'body') {
             fucker_list = _.union(fucker_list, _.filter(this.fucker_list, {type: 'all'}))
         }

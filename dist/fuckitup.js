@@ -10295,7 +10295,7 @@ module.exports = Fucker;
 /*! exports provided: 0, 1, 2, 3, 4, 5, 6, default */
 /***/ (function(module) {
 
-module.exports = [{"name":"Space inserter","severity":3,"module":"spacer","trigger":"hover","type":"all"},{"name":"Image fucker","severity":2,"module":"img_fucker","trigger":"img_load","type":"img"},{"name":"Image joker","severity":3,"module":"img_joker","trigger":"img_load","type":"img"},{"name":"Drunk cursor","severity":3,"module":"drunk_cursor","trigger":"frame","type":"body"},{"name":"Spinning blaaurgh","severity":2,"module":"spinner","trigger":"hover","type":"all"},{"name":"Font fucker","severity":1,"module":"font_fucker","trigger":"load","type":"all"},{"name":"Random scroller","severity":1,"module":"scroller","trigger":"frame","type":"body"}];
+module.exports = [{"name":"Space inserter","severity":3,"module":"spacer","trigger":"hover","type":"text"},{"name":"Image fucker","severity":2,"module":"img_fucker","trigger":"img_load","type":"img"},{"name":"Image joker","severity":3,"module":"img_joker","trigger":"img_load","type":"img"},{"name":"Drunk cursor","severity":3,"module":"drunk_cursor","trigger":"frame","type":"body"},{"name":"Spinning blaaurgh","severity":2,"module":"spinner","trigger":"hover","type":"all"},{"name":"Font fucker","severity":1,"module":"font_fucker","trigger":"load","type":"text"},{"name":"Random scroller","severity":1,"module":"scroller","trigger":"frame","type":"body"}];
 
 /***/ }),
 
@@ -10388,9 +10388,11 @@ module.exports = {
         var f_size = 0;
         var font_size = window.getComputedStyle(this.wrap, null).getPropertyValue('font-size');
         font_size = parseFloat(font_size);
-        f_size = _.random(font_size - 4, font_size + 4);
+        var deviation = 4 * this.parent.severity / 2;
+
+        f_size = _.random(font_size + deviation, font_size + deviation);
         this.prev_style = this.$wrap.attr('style');
-        this.$wrap.attr('style', 'font-size: ' + f_size + 'px');
+        this.$wrap.attr('style', this.prev_style + ('font-size: ' + f_size + 'px'));
     },
     start: function start(e) {},
     stop: function stop() {
@@ -10655,6 +10657,11 @@ var FuckItUp = function () {
         this.fucker_list = _.filter(fuckers_json, function (o) {
             return o.severity <= _this.severity;
         });
+        this.fucker_list = _.map(this.fucker_list, function (o) {
+            if (o.type === 'text') {
+                o.type = ["span", "a", "p", "div", "li", "dt", "dd", "em", "strong", "i", "small", "b", "u", "del", "ins", "sub", "sup", "pre", "hr", "address", "footer", "header", "cite", "small", "s", "q", "nav", "th", "td", "col", "article"];
+            }
+        });
         this.fuckers = [];
         this.utils = {
             mouse_pos: {
@@ -10740,7 +10747,8 @@ var FuckItUp = function () {
     }, {
         key: 'makeFucker',
         value: function makeFucker(el) {
-            var fucker_list = _.filter(this.fucker_list, { type: el.type });
+            var fucker_list = _.filter(this.fucker_list, { type: el.type }); //only with type
+            fucker_list = _.union(fucker_list, _.filter(this.fucker_list, { type: [el.type] })); //one of type in array
             if (el.type !== 'body') {
                 fucker_list = _.union(fucker_list, _.filter(this.fucker_list, { type: 'all' }));
             }
