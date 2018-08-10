@@ -41,7 +41,7 @@
   }
 }
 .debug {
-  border: 1px solid red;
+  border: 1px solid rgba(255, 0, 0, 0.2);
 }
 
 

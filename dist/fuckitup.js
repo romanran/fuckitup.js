@@ -10386,11 +10386,9 @@ var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 module.exports = {
     init: function init() {
         var f_size = 0;
-        if (_.random(0, 1)) {
-            f_size = _.random(4, 10);
-        } else {
-            f_size = _.random(30, 60);
-        }
+        var font_size = window.getComputedStyle(this.wrap, null).getPropertyValue('font-size');
+        font_size = parseFloat(font_size);
+        f_size = _.random(font_size - 4, font_size + 4);
         this.prev_style = this.$wrap.attr('style');
         this.$wrap.attr('style', 'font-size: ' + f_size + 'px');
     },
@@ -10726,10 +10724,10 @@ var FuckItUp = function () {
             var $elem = u(elem);
             var has_text = elem.childNodes.length === 1 && elem.childNodes[0].nodeName === '#text';
 
-            var no_text_node = _.some(this.allowed_nodes, function (t) {
+            var no_text_node = _.some(this.no_text_node, function (t) {
                 return $elem.is(t);
             });
-            // deb($elem, elem, has_text, elem.nodeName, 'isallowed', no_text_node)
+            // deb($elem, elem, has_text, elem.localName, 'isallowed', no_text_node)
             if ((has_text || no_text_node || elem.localName === 'body') && _.lowerCase(elem.nodeName) !== 'script') {
                 this.elems.push({
                     type: _.lowerCase(elem.nodeName),

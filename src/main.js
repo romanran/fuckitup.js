@@ -92,8 +92,8 @@ class FuckItUp {
         const $elem = u(elem)
         const has_text = elem.childNodes.length === 1 && elem.childNodes[0].nodeName === '#text' 
         
-        const no_text_node = _.some(this.allowed_nodes, t => $elem.is(t))
-        // deb($elem, elem, has_text, elem.nodeName, 'isallowed', no_text_node)
+        const no_text_node = _.some(this.no_text_node, t => $elem.is(t))
+        // deb($elem, elem, has_text, elem.localName, 'isallowed', no_text_node)
         if ((has_text || no_text_node || elem.localName === 'body') 
             && _.lowerCase(elem.nodeName) !== 'script') {
             this.elems.push({
