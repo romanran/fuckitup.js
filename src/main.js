@@ -8,8 +8,10 @@ const debug = process.env.NODE_ENV === 'development'
 window.deb = debug ? console.log : function(){}
 
 const branch = debug ? 'develop' : 'master'
-
-u(document.head).append(`<link rel="stylesheet" href="https://rawgit.com/romanran/fuckitup.js/${branch}/dist/fuckitup.css">`)
+deb(u("link[href='../dist/fuckitup.css']"))
+if (!u("link[href='../dist/fuckitup.css']").length) {
+    u(document.head).append(`<link rel="stylesheet" href="https://rawgit.com/romanran/fuckitup.js/${branch}/dist/fuckitup.css">`)
+}
 
 const fuckers = {
     spacer: require('./fuckers/spacer'),

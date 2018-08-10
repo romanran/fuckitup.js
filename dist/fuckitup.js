@@ -10619,8 +10619,10 @@ var debug = "development" === 'development';
 window.deb = debug ? console.log : function () {};
 
 var branch = debug ? 'develop' : 'master';
-
-u(document.head).append('<link rel="stylesheet" href="https://rawgit.com/romanran/fuckitup.js/' + branch + '/dist/fuckitup.css">');
+deb(u("link[href='../dist/fuckitup.css']"));
+if (!u("link[href='../dist/fuckitup.css']").length) {
+    u(document.head).append('<link rel="stylesheet" href="https://rawgit.com/romanran/fuckitup.js/' + branch + '/dist/fuckitup.css">');
+}
 
 var fuckers = {
     spacer: __webpack_require__(/*! ./fuckers/spacer */ "./src/fuckers/spacer.js"),
