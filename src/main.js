@@ -8,7 +8,7 @@ const debug = process.env.NODE_ENV === 'development'
 window.deb = debug ? console.log : function(){}
 
 const branch = debug ? 'develop' : 'master'
-deb(u("link[href='../dist/fuckitup.css']"))
+
 if (!u("link[href='../dist/fuckitup.css']").length) {
     u(document.head).append(`<link rel="stylesheet" href="https://rawgit.com/romanran/fuckitup.js/${branch}/dist/fuckitup.css">`)
 }
@@ -25,7 +25,7 @@ const fuckers = {
 
 class FuckItUp {
     constructor(severity = 3) {
-        this.allowed_nodes = ['input', 'button', 'img', 'select', 'textarea', 'body', 'video', 'audio']
+        this.no_text_node = ['input', 'button', 'img', 'select', 'textarea', 'body', 'video', 'audio']
         this.severities = {
             1: 'kitten',
             2: 'spaghetti',
@@ -66,7 +66,7 @@ class FuckItUp {
         this.cacheElems(u('body').nodes[0])
 
         this.elems.forEach(el => {
-            if (this.toFuckOrNotToFuck()) {
+            if (this.toFuckOrNotToFuck() || el.nodeName === 'body') {
                 this.makeFucker(el)
                 if (debug) {
                     u(el.elem).addClass('debug')
@@ -92,9 +92,10 @@ class FuckItUp {
         const $elem = u(elem)
         const has_text = elem.childNodes.length === 1 && elem.childNodes[0].nodeName === '#text' 
         
-        const is_allowed = _.some(this.allowed_nodes, t => $elem.is(t))
-        // deb($elem, elem, has_text, elem.nodeName, 'isallowed', is_allowed)
-        if (has_text || is_allowed) {
+        const no_text_node = _.some(this.allowed_nodes, t => $elem.is(t))
+        // deb($elem, elem, has_text, elem.nodeName, 'isallowed', no_text_node)
+        if ((has_text || no_text_node || elem.localName === 'body') 
+            && _.lowerCase(elem.nodeName) !== 'script') {
             this.elems.push({
                 type: _.lowerCase(elem.nodeName),
                 $elem: $elem,
@@ -106,7 +107,9 @@ class FuckItUp {
 
     makeFucker(el) {
         let fucker_list = _.filter(this.fucker_list, {type: el.type})
-        fucker_list = _.union(fucker_list, _.filter(this.fucker_list, {type: 'all'}))
+        if (el.type !== 'body') {
+            fucker_list = _.union(fucker_list, _.filter(this.fucker_list, {type: 'all'}))
+        }
         const fucker_type = _.sample(fucker_list)
         if (fucker_type) {
             const fucker = new Fucker(el.$elem, el.type, fucker_type, this, fuckers[fucker_type.module])

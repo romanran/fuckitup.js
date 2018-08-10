@@ -10295,7 +10295,7 @@ module.exports = Fucker;
 /*! exports provided: 0, 1, 2, 3, 4, 5, 6, default */
 /***/ (function(module) {
 
-module.exports = [{"name":"Space inserter","severity":3,"module":"spacer","trigger":"hover","type":"all"},{"name":"Image fucker","severity":2,"module":"img_fucker","trigger":"img_load","type":"img"},{"name":"Image joker","severity":3,"module":"img_joker","trigger":"img_load","type":"img"},{"name":"Drunk cursor","severity":3,"module":"drunk_cursor","trigger":"frame","type":"body"},{"name":"Spinning blaaurgh","severity":2,"module":"spinner","trigger":"load","type":"all"},{"name":"Font fucker","severity":1,"module":"font_fucker","trigger":"load","type":"all"},{"name":"Random scroller","severity":1,"module":"scroller","trigger":"frame","type":"body"}];
+module.exports = [{"name":"Space inserter","severity":3,"module":"spacer","trigger":"hover","type":"all"},{"name":"Image fucker","severity":2,"module":"img_fucker","trigger":"img_load","type":"img"},{"name":"Image joker","severity":3,"module":"img_joker","trigger":"img_load","type":"img"},{"name":"Drunk cursor","severity":3,"module":"drunk_cursor","trigger":"frame","type":"body"},{"name":"Spinning blaaurgh","severity":2,"module":"spinner","trigger":"hover","type":"all"},{"name":"Font fucker","severity":1,"module":"font_fucker","trigger":"load","type":"all"},{"name":"Random scroller","severity":1,"module":"scroller","trigger":"frame","type":"body"}];
 
 /***/ }),
 
@@ -10560,9 +10560,13 @@ var _ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 
 module.exports = {
     init: function init() {
-        if (this.type === 'body') {
+        this.active = false;
+    },
+    start: function start() {
+        if (this.type === 'body' || this.active) {
             return 0;
         }
+        this.active = true;
         this.added_class = _.sample(['blaaargh', 'blaaargh--reverse']);
         this.$wrap.addClass(this.added_class);
         var origin = {
@@ -10572,8 +10576,9 @@ module.exports = {
         this.prev_style = this.$wrap.attr('style');
         this.$wrap.attr('style', 'transform-origin: ' + origin.h + ' ' + origin.v + '; animation-duration: ' + _.random(200, 3000) + 'ms;');
     },
-    start: function start() {},
-    stop: function stop() {
+    stop: function stop() {},
+    destroy: function destroy() {
+        this.active = false;
         this.$wrap.removeClass(this.added_class);
         this.$wrap.attr('style', this.prev_style);
     }
@@ -10619,7 +10624,7 @@ var debug = "development" === 'development';
 window.deb = debug ? console.log : function () {};
 
 var branch = debug ? 'develop' : 'master';
-deb(u("link[href='../dist/fuckitup.css']"));
+
 if (!u("link[href='../dist/fuckitup.css']").length) {
     u(document.head).append('<link rel="stylesheet" href="https://rawgit.com/romanran/fuckitup.js/' + branch + '/dist/fuckitup.css">');
 }
@@ -10642,7 +10647,7 @@ var FuckItUp = function () {
 
         _classCallCheck(this, FuckItUp);
 
-        this.allowed_nodes = ['input', 'button', 'img', 'select', 'textarea', 'body', 'video', 'audio'];
+        this.no_text_node = ['input', 'button', 'img', 'select', 'textarea', 'body', 'video', 'audio'];
         this.severities = {
             1: 'kitten',
             2: 'spaghetti',
@@ -10693,7 +10698,7 @@ var FuckItUp = function () {
             this.cacheElems(u('body').nodes[0]);
 
             this.elems.forEach(function (el) {
-                if (_this2.toFuckOrNotToFuck()) {
+                if (_this2.toFuckOrNotToFuck() || el.nodeName === 'body') {
                     _this2.makeFucker(el);
                     if (debug) {
                         u(el.elem).addClass('debug');
@@ -10721,11 +10726,11 @@ var FuckItUp = function () {
             var $elem = u(elem);
             var has_text = elem.childNodes.length === 1 && elem.childNodes[0].nodeName === '#text';
 
-            var is_allowed = _.some(this.allowed_nodes, function (t) {
+            var no_text_node = _.some(this.allowed_nodes, function (t) {
                 return $elem.is(t);
             });
-            // deb($elem, elem, has_text, elem.nodeName, 'isallowed', is_allowed)
-            if (has_text || is_allowed) {
+            // deb($elem, elem, has_text, elem.nodeName, 'isallowed', no_text_node)
+            if ((has_text || no_text_node || elem.localName === 'body') && _.lowerCase(elem.nodeName) !== 'script') {
                 this.elems.push({
                     type: _.lowerCase(elem.nodeName),
                     $elem: $elem,
@@ -10738,7 +10743,9 @@ var FuckItUp = function () {
         key: 'makeFucker',
         value: function makeFucker(el) {
             var fucker_list = _.filter(this.fucker_list, { type: el.type });
-            fucker_list = _.union(fucker_list, _.filter(this.fucker_list, { type: 'all' }));
+            if (el.type !== 'body') {
+                fucker_list = _.union(fucker_list, _.filter(this.fucker_list, { type: 'all' }));
+            }
             var fucker_type = _.sample(fucker_list);
             if (fucker_type) {
                 var fucker = new Fucker(el.$elem, el.type, fucker_type, this, fuckers[fucker_type.module]);
